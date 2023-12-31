@@ -37,4 +37,4 @@ Erros durante a execução são registrados no arquivo de log e exibidos no cons
 Caso ocorra uma falha ao buscar informações de uma moeda específica, o script continua com as outras.
 ## Agendamento e Pausa
 O script espera 1 hora antes de tentar a extração novamente.
-# Lembre-se de configurar o ambiente e as dependências antes de executar o script. Para uma execução contínua, é recomendável executar o script em um ambiente adequado, como um servidor ou máquina dedicada.
+**Lembre-se de:** configurar o ambiente e as dependências antes de executar o script. Para uma execução contínua, é recomendável executar o script em um ambiente adequado, como um servidor ou máquina dedicada.
