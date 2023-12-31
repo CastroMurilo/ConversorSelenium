@@ -5,12 +5,13 @@ Este script Python realiza a automação da navegação web para obter informaç
 - **Python 3.10**
 - Bibliotecas: **Selenium**, **Pandas**
 
-bash
-Copy code
+### Instalação
+
+Para começar, certifique-se de ter o [pip](https://pip.pypa.io/en/stable/installation/) instalado em seu ambiente. Em seguida, execute o seguinte comando para instalar as dependências necessárias:
+
+```bash
 pip install selenium pandas
-# Uso
-- **Configure o ambiente Python e instale as dependências.**
-- **Execute o script Python.**
+
 
 # Detalhes do Script
 ## Bibliotecas Utilizadas
