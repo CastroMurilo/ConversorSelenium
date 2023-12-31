@@ -1,9 +1,9 @@
 # Cotações de Moedas
 Este script Python realiza a automação da navegação web para obter informações de cotações de moedas em relação ao Real. O código utiliza a biblioteca Selenium para controlar um navegador Firefox em modo headless, permitindo a execução sem interface gráfica. As informações obtidas são registradas em um arquivo CSV e mensagens de log são geradas para monitorar o processo.
 
-## Pré-Requisitos
-- **Python 3.10**
-- Bibliotecas: **Selenium**, **Pandas**
+# Pré-Requisitos
+## -Python 3.10**
+## - Bibliotecas: **Selenium**, **Pandas**
 
 # Detalhes do Script
 ## Bibliotecas Utilizadas
