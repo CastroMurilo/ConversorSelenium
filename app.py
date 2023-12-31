@@ -1,14 +1,17 @@
 # Bibliotecas necessárias
-import logging  # Registra mensagens no log
-from selenium import webdriver  # Navegação web
-from selenium.webdriver.common.keys import Keys  # Interagir com teclas do teclado
-from selenium.webdriver.common.by import By  # Para a espera explícita
-from selenium.webdriver.support.ui import WebDriverWait  # Para a espera explícita
-from selenium.webdriver.support import expected_conditions as EC  # Para a espera explícita
-import pandas as pd  # Manipulação de dados em formato CSV
-from datetime import datetime  # Manipulação de data e hora
-import os  # Biblioteca para interagir com o sistema operacional
-import time  # Controle de tempo de execução do código
+import logging
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+import pandas as pd
+from datetime import datetime
+import os
+import time
+from selenium import webdriver
+from webdriver_manager.firefox import GeckoDriverManager
+import csv  # Adicionando a importação necessária para manipulação de CSV
 
 # Obter o diretório atual do script
 script_dir = os.path.dirname(os.path.realpath(__file__))
@@ -36,14 +39,28 @@ options.headless = True
 options.add_argument('--disable-gpu')
 options.add_argument('--disable-software-rasterizer')
 
-while True:  # Inicia um loop infinito
-    try:
-        # Inicia Firefox em modo headless
-        nav = webdriver.Firefox(options=options)
+# Inicia Firefox em modo headless fora do loop
+nav = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=options)
 
-        # Lista de moedas para pesquisar
-        moedas = ["Euro", "Dolar americano", "Libra esterlina", "Peso argentino"]
+# Lista de moedas para pesquisar
+moedas = ["Euro", "Dolar americano", "Libra esterlina", "Peso argentino"]
 
+# Verificar se a pasta 'cotacoes' existe, se não, criá-la
+cotacoes_dir = os.path.join(script_dir, 'cotacoes')
+if not os.path.exists(cotacoes_dir):
+    os.makedirs(cotacoes_dir)
+
+# Criar o arquivo CSV
+filename = os.path.join(cotacoes_dir, 'cotacoes.csv')
+if not os.path.exists(filename):
+    # Cabeçalho do arquivo CSV
+    header = ['Data e Hora', 'Moeda', 'Cotacao']
+    with open(filename, 'w', newline='', encoding='utf-8') as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=';')
+        csv_writer.writerow(header)
+
+try:
+    while True:  # Inicia um loop infinito
         for moeda in moedas:
             try:
                 # Pesquisar pela moeda no Google
@@ -57,49 +74,31 @@ while True:  # Inicia um loop infinito
                 data_moeda = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, '.k0Rg6d.hqAUc'))).text
                 print(moeda, resultado_moeda, data_moeda)
 
-                # Exportar para CSV na pasta 'cotacoes'
-                timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-                cotacoes_dir = os.path.join(script_dir, 'cotacoes')
-
-                # Verificar se a pasta 'cotacoes' existe, se não, criá-la
-                if not os.path.exists(cotacoes_dir):
-                    os.makedirs(cotacoes_dir)
-
-                filename = os.path.join(cotacoes_dir, 'cotacoes.csv')
-
                 # Formatando os dados para o formato desejado
                 resultado_moeda = resultado_moeda.replace('R$ ', 'R$').replace('.', '').replace(',', '.')
-                data_moeda = datetime.now().strftime('%d de %b., %H:%M')
 
                 # Criar um DataFrame com as informações
-                data = {'Data e Hora': [data_moeda], 'Moeda': [moeda], 'Cotacao': [resultado_moeda], }
+                data = {'Data e Hora': [data_moeda], 'Moeda': [moeda], 'Cotacao': [resultado_moeda]}
                 tabela = pd.DataFrame(data)
 
                 # Salvando o DataFrame como um arquivo CSV na pasta 'cotacoes'
-                tabela.to_csv(filename, mode='a', header=not os.path.exists(filename), index=False, sep=';')
-
-                # Registrar a criação do arquivo no log
-                with open(log_file_path, 'a') as log_file:
-                    log_file.write(f'Informações de {moeda} adicionadas ao arquivo em {datetime.now()}\n')
-
-                print(f'Informações de {moeda} adicionadas ao arquivo')
+                tabela.to_csv(filename, mode='a', header=not os.path.exists(filename), index=False, sep=';', encoding='utf-8')
 
             except Exception as e:
                 # Registrar erro no log em caso de falha na extração de informações da moeda
                 logging.error(f'Erro ao buscar informações de {moeda}: {str(e)}')
-
                 # Imprimir mensagem de erro no console
                 print(f'Erro ao buscar informações de {moeda}: {str(e)}')
 
-        # Fechar o navegador após concluir a extração para economizar recursos
-        nav.quit()
+        # Aguardar 1 hora antes de tentar novamente
+        time.sleep(3600)
 
-    except Exception as e:
-        # Registrar erro no log em caso de falha ao iniciar o navegador
-        logging.error(f'Erro ao iniciar o navegador: {str(e)}')
+except Exception as e:
+    # Registrar erro no log em caso de falha ao iniciar o navegador
+    logging.error(f'Erro ao iniciar o navegador: {str(e)}')
+    # Imprimir mensagem de erro no console
+    print(f'Erro ao iniciar o navegador: {str(e)}')
 
-        # Imprimir mensagem de erro no console
-        print(f'Erro ao iniciar o navegador: {str(e)}')
-
-    # Aguardar 1 hora antes de tentar novamente
-    time.sleep(3600)
+finally:
+    # Fechar o navegador após o término do loop
+    nav.quit()
