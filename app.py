@@ -40,7 +40,7 @@ options.add_argument('--disable-gpu')
 options.add_argument('--disable-software-rasterizer')
 
 # Inicia Firefox em modo headless fora do loop
-nav = webdriver.Firefox(options=options)
+nav = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=options)
 
 # Lista de moedas para pesquisar
 moedas = ["Euro", "Dolar americano", "Libra esterlina", "Peso argentino"]
