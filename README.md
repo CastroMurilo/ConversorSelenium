@@ -3,7 +3,7 @@ Este script Python realiza a automação da navegação web para obter informaç
 
 # Pré-Requisitos
 - **Python 3.10**
-- Bibliotecas: **Selenium**, **Pandas**
+- Bibliotecas: **Selenium**, **Pandas**, **webdriver_manager**
 
 # Detalhes do Script
 ## Bibliotecas Utilizadas
