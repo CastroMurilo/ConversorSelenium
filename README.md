@@ -28,6 +28,14 @@ Cada execução adiciona uma nova linha ao arquivo 'cotacoes.csv'.
 ## Logs e Tratamento de Erros
 Erros durante a execução são registrados no arquivo de log e exibidos no console.
 Caso ocorra uma falha ao buscar informações de uma moeda específica, o script continua com as outras.
-## Agendamento e Pausa
-O script espera 1 hora antes de tentar a extração novamente.
-**Lembre-se de:** configurar o ambiente e as dependências antes de executar o script. Para uma execução contínua, é recomendável executar o script em um ambiente adequado, como um servidor ou máquina dedicada.
+# Observações
+- O script faz uso do modo **headless** do navegador para execução sem interface gráfica.
+- Caso haja falha na inicialização padrão do navegador, uma tentativa alternativa é realizada.
+- O script continuará a executar indefinidamente, coletando informações a cada iteração do loop.
+- Certifique-se de configurar corretamente o ambiente e as dependências antes de executar o script.
+
+
+
+
+
+
